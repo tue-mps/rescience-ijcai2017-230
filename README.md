@@ -19,15 +19,39 @@ Code for replicating the paper "Object Detection Meets Knowledge Graphs".
 
 More detailed descriptions are included in the top of each of the files themselves.
 
+# Installation
+
+We first need to clone this repository, and the random walk with restart repository (which can be found at [https://github.com/jinhongjung/pyrwr](https://github.com/jinhongjung/pyrwr)):
+
+`git clone https://github.com/tue-mps/rescience-ijcai2017-230.git`
+
+`cd "rescience-ijcai2017-230"`
+
+`git clone https://github.com/jinhongjung/pyrwr.git`
+
+Next we need to create the correct Environment from the .yml file and the RWR requirements. (if using Anaconda prompt):
+
+`conda env create -f environment.yml` (this might give a pip error for pyrwr==1.0.0, but this can be ignored)
+
+`conda activate odmkg_env`
+
+`cd pyrwr`
+
+`pip3 install -r requirements.txt`
+
+`python setup.py install`
+
+`cd ..`
+
 
 # Data-preparation
 For this application, we use the PASCAL VOC 2007 dataset and the COCO2014 dataset (for object detection) and the ConceptNet 5.7.0 and 5.5.0 knowledge graphs.
 
 ## The easy way
 
-The easiest way to gather the datasets is to download it from #adddataurlhere.
+The easiest way to gather the datasets is to download it from [https://zenodo.org/record/5095407#.YVWjqrgzaiN](https://zenodo.org/record/5095407#.YVWjqrgzaiN). There are 3 files, 2 .pth files that contain the trained models and 1 large zip file (26.8 GB) which contains the raw data. Download all 3 of them.
 
-after cloning the repository, unzip the 'raw data' file in your project folder such that your structure looks as follows:
+after cloning the repository, unzip the 'raw data' file (without the extra folder) in your project folder such that your structure looks as follows:
 
 add the trained model (.pth files) into the Trained Models folder also as follows:
 
@@ -131,17 +155,37 @@ make sure the raw data folder is structured correctly:
 
 # Usage
 
-Clone the repository using `git clone repositorylink`
+Once the repositories are installed, the environment is correct and the raw data and trained models are put in the correct locations, the code can be used.
 
-Create a correct environment (update this)
+**It is recommended to use GPU (cuda), as cpu only has not been developed/tested for.**
 
-Make sure the raw data is added correctly
+To recreate the results from the paper you can just run the initial configuration which includes the ConceptNet consistency matrix.
+You can run the script from the prompt as follows:
 
-The easiest is to download the trained models, otherwise `training.py` in the Model Training folders should be run first.
+`python -m Results.results_voc` or
+`python -m Results.results_coco`
 
-To obtain the semantic consistency matrix for the frequency based method, `frequency_based.py` in the semantic consistency folder should be run. This will store the matrix information in the folder. For the knowledge graph based method, first `knowledge_graph_prep.py` should be run. this will filter the raw data graph. Next `knowledge_graph_based.py` will produce and store the matrix. Since the matrices are stored, these have only to be run once.
+If you want to train a model for yourself, `training.py` in the Model Training folders should be run first.
 
-To recreate the results from the paper, you can run either or both `results_voc` and `results_coco` in the results folder. In the top of the file you can change the configurations to select the correct matrix method to use and then this will output the mAP and recall.
+To (re-)obtain the semantic consistency matrix for the frequency based method, `frequency_based.py` in the semantic consistency folder should be run. This will store the matrix information in the folder. For the knowledge graph based method, first `knowledge_graph_prep.py` should be run. this will filter the raw data graph. Next `knowledge_graph_based.py` will produce and store the matrix. Since the matrices are stored, these have only to be run once. However, they are included in the files, so if you just want to reproduce the results from the paper, you don't have to run these.
+
+To recreate the results from the paper, you can run either or both `results_voc` and `results_coco` in the Results folder. In the top of the file you can change the configurations to select the correct matrix method to use and then this will output the mAP and recall.
+
+
+## configurations
+
+results_voc and results_coco start with a couple of configuration lines. Initially for the VOC set they are as follows:
+
+```matrix_type = 'KG-CNet-55-VOC'   # choose between 'KF-All-VOC', 'KF-500-VOC', 'KG-CNet-57-VOC' or 'KG-CNet-55-VOC'
+detections_per_image = 500       # the maximum number of detected objects per image
+num_iterations = 10              # number of iterations to calculate p_hat
+box_score_threshold = 1e-5       # minimum score for a bounding box to be kept as detection (default = 0.05)
+bk = 5                           # number of neighbouring bounding boxes to consider for p_hat
+lk = 5                           # number of largest semantic consistent classes to consider for p_hat
+epsilon = 0.9                    # trade-off parameter for traditional detections and knowledge aware detections
+topk = 100                       # maximum number of detections to be considered for metrics (recall@k / mAP@k)
+```
+They can be changed, and by running the script again, different results will be computed.
 
 # Summary of Reproducibility
 
