@@ -15,6 +15,8 @@ Code for replicating the paper "Object Detection Meets Knowledge Graphs".
 
 `results_voc` and `results_coco` are used to output the mAP and recall (per class and averaged) for the configurations (including matrix type) which can be changed at the top of the files.
 
+'results_voc_multiple_runs' and 'results_coco_multiple_runs' can be run to compute all results used in the paper in one single run
+
 `dataloading`, `metrics`, `plotting` and `testing` in Utils contain several functions used to support the main files. 
 
 More detailed descriptions are included in the top of each of the files themselves.
@@ -29,11 +31,14 @@ We first need to clone this repository, and the random walk with restart reposit
 
 `git clone https://github.com/jinhongjung/pyrwr.git`
 
-Next we need to create the correct Environment from the .yml file and the RWR requirements. (if using Anaconda prompt):
+Next we need to create the correct Environment from our requirements file and the RWR requirements. (if using Anaconda prompt):
 
-`conda env create -f environment.yml` (this might give a pip error for pyrwr==1.0.0, but this can be ignored)
+(if you want to create a new environment for this project, I suggest using python 3.7):
+`conda create -n odmkg_env python=3.7`
 
 `conda activate odmkg_env`
+
+`pip3 install -r requirements.txt`
 
 `cd pyrwr`
 
@@ -74,9 +79,12 @@ add the trained model (.pth files) into the Trained Models folder also as follow
       *	SegmentationObject
   *	Datasets
   *	Model Training
-    *	Trained Models
-         * **coco-FRCNN-8e.pth**
-         * **voc-FRCNN-48e.pth**
+    *	Trained models
+         * **coco-FRCNN-resnet50.pth**
+         * **coco-FRCNN-vgg16.pth**
+         * **voc-FRCNN-resnet50.pth**
+         * **voc-FRCNN-resnet18.pth**
+         * **voc-FRCNN-vgg16.pth**
   *	Results
   *	Semantic Consistency
   *	Utils
@@ -145,9 +153,12 @@ make sure the raw data folder is structured correctly:
       *	SegmentationObject
   *	Datasets
   *	Model Training
-    *	Trained Models
-         * **coco-FRCNN-8e.pth**
-         * **voc-FRCNN-48e.pth**
+    *	Trained models
+         * **coco-FRCNN-resnet50.pth**
+         * **coco-FRCNN-vgg16.pth**
+         * **voc-FRCNN-resnet50.pth**
+         * **voc-FRCNN-resnet18.pth**
+         * **voc-FRCNN-vgg16.pth**
   *	Results
   *	Semantic Consistency
   *	Utils
@@ -161,6 +172,11 @@ Once the repositories are installed, the environment is correct and the raw data
 
 To recreate the results from the paper you can just run the initial configuration which includes the ConceptNet consistency matrix.
 You can run the script from the prompt as follows:
+
+`python -m Results.results_voc_multiple_runs` or
+`python -m Results.results_coco_multiple_runs`
+
+Or if you want to select specific configurations, you can use:
 
 `python -m Results.results_voc` or
 `python -m Results.results_coco`
@@ -176,7 +192,8 @@ To recreate the results from the paper, you can run either or both `results_voc`
 
 results_voc and results_coco start with a couple of configuration lines. Initially for the VOC set they are as follows:
 
-```matrix_type = 'KG-CNet-55-VOC'   # choose between 'KF-All-VOC', 'KF-500-VOC', 'KG-CNet-57-VOC' or 'KG-CNet-55-VOC'
+```model_type = 'resnet50'       # choose between 'resnet50', 'resnet18' or 'vgg16'
+matrix_type = 'KG-CNet-55-VOC'   # choose between 'KF-All-VOC', 'KF-500-VOC', 'KG-CNet-57-VOC' or 'KG-CNet-55-VOC'
 detections_per_image = 500       # the maximum number of detected objects per image
 num_iterations = 10              # number of iterations to calculate p_hat
 box_score_threshold = 1e-5       # minimum score for a bounding box to be kept as detection (default = 0.05)
@@ -199,7 +216,14 @@ The authors describe a framework where a frequency based approach and a knowledg
 
 ### Results
 
-We were able to successfully implement the framework from scratch and replicate the experiments supporting the claim that this approach can be used to re-optimize an existing object detection algorithm. The frequency based approach to extract the semantic consistency showed an increase in recall, while maintaining mAP, confirming the second claim of the authors. The knowledge graph based approach, shows a negative (decrease in mAP) result with respect to the baseline. This could be due to the use of a different object detection model. Therefore we concluded that the benefits of knowledge-aware re-optimization are model-specific and cannot be used blindly for every object detector.
+We were able to successfully implement the framework from scratch as described.
+We have bench‐marked the developed framework on two datasets and replicated the
+results of all matrices as described. The claim of the authors can not be
+confirmed for either of the described approaches. The results either showed an increase
+of recall at the cost of a decrease in mAP, or a maintained mAP, without an improvement
+in recall. Three different backbone models show similar behavior after re‐optimization,
+concluding that the knowledge‐aware re‐optimization does not benefit object detection
+algorithms.
 
 ### What was easy
 
