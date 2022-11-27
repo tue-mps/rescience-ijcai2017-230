@@ -3,21 +3,26 @@ from Datasets.datasets import CocoDetection
 from Utils.testing import *
 from Utils.metrics import *
 import numpy as np
+from torchvision.models.detection import FasterRCNN
+from torchvision.models.detection.rpn import AnchorGenerator
+from torchvision.models.detection.backbone_utils import BackboneWithFPN, resnet_fpn_backbone
 
 # CONFIG
-matrix_type = 'KF-500-COCO'     # choose between 'KF-All-COCO', 'KF-500-COCO', 'KG-CNet-57-COCO' or 'KG-CNet-55-COCO'
-detections_per_image = 500      # the maximum number of detected objects per image
-num_iterations = 10             # number of iterations to calculate p_hat
-box_score_threshold = 1e-5      # minimum score for a bounding box to be kept as detection (default = 0.05)
-bk = 5                          # number of neighbouring bounding boxes to consider for p_hat
-lk = 5                          # number of largest semantic consistent classes to consider for p_hat
-epsilon = 0.75                  # trade-off parameter for traditional detections and knowledge aware detections
-topk = 10                      # maximum number of detections to be considered for metrics (recall@k / mAP@k)
+model_type = 'coco-FRCNN-resnet50'  # choose between 'coco-FRCNN-resnet50' or 'coco-FRCNN-vgg16'
+matrix_type = 'KG-CNet-57-COCO'     # choose between 'KF-All-COCO', 'KF-500-COCO', 'KG-CNet-57-COCO' or 'KG-CNet-55-COCO'
+detections_per_image = 500          # the maximum number of detected objects per image
+num_iterations = 10                 # number of iterations to calculate p_hat
+box_score_threshold = 1e-5          # minimum score for a bounding box to be kept as detection (default = 0.05)
+bk = 5                              # number of neighbouring bounding boxes to consider for p_hat
+lk = 5                              # number of largest semantic consistent classes to consider for p_hat
+epsilon = 0.75                      # trade-off parameter for traditional detections and knowledge aware detections
+topk = 100                          # maximum number of detections to be considered for metrics (recall@k / mAP@k)
 
 """
 Running this file will output the mAP@k and recall@k per class and averaged for the test split (4k images, taken from
 training and validation sets) on MS COCO 2014. Above configurations will output the results as mentioned in the paper.
-A different semantic consistency matrix (matrix_type) can be selected to generate the results for different approaches.  
+A different model backbone and semantic consistency matrix (matrix_type) can be selected to generate the results for
+different approaches.  
 """
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -105,17 +110,59 @@ if __name__ == '__main__':
     num_classes = 92
     test_loader = coco_test_dataloader
 
-    model = torchvision.models.detection.fasterrcnn_resnet50_fpn(pretrained=False,
-                                                                 progress=True,
-                                                                 num_classes=num_classes,
-                                                                 pretrained_backbone=True,
-                                                                 trainable_backbone_layers=1,
-                                                                 box_detections_per_img=detections_per_image,
-                                                                 box_score_thresh=box_score_threshold
-                                                                 )
+    if model_type == 'coco-FRCNN-resnet50':
+
+        backbone = resnet_fpn_backbone('resnet50', pretrained=False, trainable_layers=5)
+
+        backbone.out_channels = 256
+
+        anchor_generator = AnchorGenerator(sizes=((32,), (64,), (128,), (256,), (512,)),
+                                           aspect_ratios=(
+                                               (0.5, 1.0, 2.0), (0.5, 1.0, 2.0), (0.5, 1.0, 2.0), (0.5, 1.0, 2.0),
+                                               (0.5, 1.0, 2.0)))
+
+        roi_pooler = torchvision.ops.MultiScaleRoIAlign(featmap_names=['0', '1', '2', '3'],
+                                                        output_size=7,
+                                                        sampling_ratio=2)
+
+        model = FasterRCNN(backbone,
+                           num_classes=num_classes,
+                           rpn_anchor_generator=anchor_generator,
+                           box_roi_pool=roi_pooler,
+                           box_detections_per_img=detections_per_image,
+                           box_score_thresh=box_score_threshold)
+
+    elif model_type == 'coco-FRCNN-vgg16':
+        backbone_vgg = torchvision.models.vgg16(pretrained=False).features
+        out_channels = 512
+        in_channels_list = [128, 256, 512, 512]
+        return_layers = {'9': '0', '16': '1', '23': '2', '30': '3'}
+        backbone = BackboneWithFPN(backbone_vgg, return_layers, in_channels_list, out_channels)
+        backbone.out_channels = 512
+
+        anchor_generator = AnchorGenerator(sizes=((32,), (64,), (128,), (256,), (512,)),
+                                           aspect_ratios=(
+                                               (0.5, 1.0, 2.0), (0.5, 1.0, 2.0), (0.5, 1.0, 2.0), (0.5, 1.0, 2.0),
+                                               (0.5, 1.0, 2.0)))
+
+        roi_pooler = torchvision.ops.MultiScaleRoIAlign(featmap_names=['0', '1', '2', '3'],
+                                                        output_size=7,
+                                                        sampling_ratio=2)
+        model = FasterRCNN(backbone,
+                           num_classes=num_classes,
+                           rpn_anchor_generator=anchor_generator,
+                           box_roi_pool=roi_pooler,
+                           box_detections_per_img=detections_per_image,
+                           box_score_thresh=box_score_threshold
+                           )
+
+    else:
+        print("please select a valid model")
+
     model.to(device)
 
-    file_path = os.path.join(path_project, "Model Training/Trained models/coco-FRCNN-8e.pth")
+    model_path = "Model Training/Trained models/" + model_type + ".pth"
+    file_path = os.path.join(path_project, model_path)
     checkpoint = torch.load(file_path)
     model.load_state_dict(checkpoint['model_state_dict'])
 
