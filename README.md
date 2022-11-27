@@ -15,7 +15,7 @@ Code for replicating the paper "Object Detection Meets Knowledge Graphs".
 
 `results_voc` and `results_coco` are used to output the mAP and recall (per class and averaged) for the configurations (including matrix type) which can be changed at the top of the files.
 
-'results_voc_multiple_runs' and 'results_coco_multiple_runs' can be run to compute all results used in the paper in one single run
+`results_voc_multiple_runs` and `results_coco_multiple_runs` can be run to compute all results used in the paper in one single run
 
 `dataloading`, `metrics`, `plotting` and `testing` in Utils contain several functions used to support the main files. 
 
