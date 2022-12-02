@@ -19,16 +19,13 @@ authors:
   - name: Gijs Dubbelman
     affiliations: 1
   - name: Hala Elforai
-    affiliations: 2
+    affiliations: 1
 # List of affiliations with code (corresponding to author affiliations), name
 # and address. You can also use these affiliations to add text such as "Equal
 # contributions" as name (with no address).
 affiliations:
   - code:    1
-    name:    University of Technology Eindhoven
-    address: Eindhoven, Netherlands
-  - code:    2
-    name:    TNO
+    name:    Eindhoven University of Technology
     address: Eindhoven, Netherlands
 
 
@@ -44,8 +41,8 @@ code:
 
 # Date URL and DOI (optional if no data)
 data:
-  - url: https://zenodo.org/record/5554349#.YWAWFppByiN
-  - doi: 10.5281/zenodo.5554349
+  - url: https://zenodo.org/record/7385730#.Y4ojRHbMIYp
+  - doi: 10.5281/zenodo.7385730
 
 # Information about the original article that has been replicated
 replication:
