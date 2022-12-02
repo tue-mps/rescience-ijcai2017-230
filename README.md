@@ -54,11 +54,11 @@ For this application, we use the PASCAL VOC 2007 dataset and the COCO2014 datase
 
 ## The easy way
 
-The easiest way to gather the datasets is to download it from [https://zenodo.org/record/5554349#.YWAWFppByiN](https://zenodo.org/record/5554349#.YWAWFppByiN). There are 3 files, 2 .pth files that contain the trained models and 1 large zip file (28.7 GB) which contains the raw data. Download all 3 of them.
+The easiest way to gather the datasets is to download it from [https://zenodo.org/record/7385730#.Y4ojRHbMIYp](https://zenodo.org/record/7385730#.Y4ojRHbMIYp). There are 6 files, 5 .pth files that contain the trained models and 1 large zip file (28.7 GB) which contains the raw data. Download all 3 of them.
 
 after cloning the repository, unzip the 'raw data' file (without the extra folder) in your project folder such that your structure looks as follows:
 
-add the trained model (.pth files) into the Trained Models folder also as follows:
+add the trained model (.pth files) into the Trained models folder also as follows:
 
 * Project
   * **Data raw**
