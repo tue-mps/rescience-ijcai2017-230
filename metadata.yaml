@@ -15,22 +15,31 @@ authors:
     email: j.l.a.lemmens@student.tue.nl
     affiliations: 1
   - name: Pavol Jancura
+    orcid: 0000-0002-9219-5014
+    email: 
     affiliations: 1
   - name: Gijs Dubbelman
+    orcid: 0000-0001-6635-3245
+    email: 
     affiliations: 1
   - name: Hala Elforai
+    orcid: 
+    email: 
     affiliations: 1
+    
+
 # List of affiliations with code (corresponding to author affiliations), name
 # and address. You can also use these affiliations to add text such as "Equal
 # contributions" as name (with no address).
 affiliations:
   - code:    1
-    name:    Eindhoven University of Technology
+    name:    University of Technology Eindhoven
     address: Eindhoven, Netherlands
+    
 
 
 # List of keywords (adding the programming language might be a good idea)
-keywords: Computer Vision, Object Detection, Knowledge Graphs, Semantic Consistency, Python
+keywords: Object Detection, Knowledge Graphs, Semantic Consistency, Python
 
 # Code URL and DOI (url is mandatory for replication, doi after acceptance)
 # You can get a DOI for your code from Zenodo,
@@ -41,26 +50,18 @@ code:
 
 # Date URL and DOI (optional if no data)
 data:
-  - url: https://zenodo.org/record/7385730#.Y4ojRHbMIYp
+  - url: https://zenodo.org/record/7385730#.Y73csnbMJPY
   - doi: 10.5281/zenodo.7385730
 
 # Information about the original article that has been replicated
 replication:
- - cite: Y. Fang, K. Kuan, J. Lin, C. Tan, and V. Chandrasekhar. “Object detection meets knowledge graphs.” In: Proceedings of the Twenty-Sixth International Joint Conference on Artificial Intelligence, {IJCAI-17}. International Joint Conferences on Artificial Intelligence, 2017, pp. 1661–1667. # Full textual citation
+ - cite: Y. Fang, K. Kuan, J. Lin, C. Tan, and V. Chandrasekhar, “Object detectionmeets  knowledge  graphs,”  inIJCAI  International  Joint  Conference  onArtificial Intelligence, vol. 0.  International Joint Conferences on ArtificialIntelligence, 2017, pp. 1661–1667 # Full textual citation
  - bib:  Fang2017ObjectGraphs # Bibtex key (if any) in your bibliography file
  - url:  https://www.ijcai.org/proceedings/2017/0230.pdf # URL to the PDF, try to link to a non-paywall version
  - doi:  10.24963/ijcai.2017/230 # Regular digital object identifier
 
 # Don't forget to surround abstract with double quotes
-abstract: "‘Object Detection meets Knowledge Graphs’ [1] by Fang et al. describes a framework
-which integrates external knowledge from knowledge graphs, or background knowledge,
-into object detection. They apply two different approaches to quantify background
-knowledge as semantic consistency. An existing object detection algorithm is re‐optimized
-with this knowledge to get updated knowledge‐aware detections. The authors of [1]
-claim that this framework can be applied to any existing object detection algorithm
-and that this approach can increase recall, while maintaining mean Average Precision
-(mAP). In this work, the framework is implemented and the experiments are conducted
-as described in [1], such that the claims can be validated."
+abstract: "Abstract content"
 
 # Bibliography file (yours)
 bibliography: bibliography.bib
