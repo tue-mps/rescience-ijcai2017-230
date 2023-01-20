@@ -89,20 +89,20 @@ review:
   - url: 
 
 contributors:
-  - name:
-    orcid: 
+  - name: Benoît Girard
+    orcid: 0000-0002-8117-7064
     role: editor
-  - name:
-    orcid:
+  - name: Hirak Kashyap
+    orcid: 0000-0003-0191-9337
     role: reviewer
-  - name:
-    orcid:
+  - name: Stéphane Herbin
+    orcid: 0000-0002-3341-3018
     role: reviewer
 
 # This information will be provided by the editor
 dates:
-  - received:  November 1, 2018
-  - accepted:
+  - received:  October 8, 2021
+  - accepted: January 3, 2023
   - published: 
 
 # This information will be provided by the editor
@@ -115,5 +115,5 @@ article:
 journal:
   - name:   "ReScience C"
   - issn:   2430-3658
-  - volume: 4
+  - volume: 9
   - issue:  1
