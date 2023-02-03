@@ -61,7 +61,11 @@ replication:
  - doi:  10.24963/ijcai.2017/230 # Regular digital object identifier
 
 # Don't forget to surround abstract with double quotes
-abstract: "Abstract content"
+abstract: "This work is a replication of ‘Object Detection meets Knowledge Graphs’, by Fang et
+al., which describes a framework that integrates external knowledge such as knowledge graphs into object detection.
+Two different approaches to quantify background knowledge as semantic consistencyare applied to re-optimize an existing object detection algorithm.
+Both methods are implemented and evaluated as described in the original paper.
+We find that the methodology is reproducible, but the claims of increasing recall, while maintaining mAP do not hold."
 
 # Bibliography file (yours)
 bibliography: bibliography.bib
